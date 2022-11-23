@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS products(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    summary VARCHAR(200),
+    created_on TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO products (name, summary) VALUES ( )
