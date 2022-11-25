@@ -1,10 +1,6 @@
 import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import {
-  UserCircleIcon,
-  BellIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Menu, Transition } from "@headlessui/react";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import Link from "next/link";
 import { signOut, signIn } from "next-auth/react";

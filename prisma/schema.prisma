@@ -43,6 +43,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  role          String?
   accounts      Account[]
   sessions      Session[]
 }
@@ -61,25 +62,27 @@ model Products {
   summary     String   @db.VarChar(500)
   description String?  @db.VarChar(800)
   image       String?
-  price       Int
+  price       Float
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
 
   stock Stock[]
 }
 
-model Sizes {
-  id   String @id @default(cuid())
-  name String
-
-  stock Stock[]
+model Colors {
+  id            String  @id @default(cuid())
+  name          String
+  class         String
+  selectedClass String
+  stock         Stock[]
 }
 
 model Stock {
-  id        String   @id @default(cuid())
+  id        Int      @id @default(autoincrement())
+  product   Products @relation(fields: [productId], references: [id])
   productId String
-  size      String
+  colors    Colors   @relation(fields: [colorId], references: [id])
+  colorId   String
+  createdAt DateTime @default(now())
   quantity  Int
-  products  Products @relation(fields: [productId], references: [id])
-  sizes     Sizes    @relation(fields: [size], references: [id])
 }

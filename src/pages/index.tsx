@@ -1,32 +1,30 @@
-import { GetServerSideProps } from "next";
-import Head from "next/head";
-import Image from "next/image";
+import { GetStaticProps, NextPage } from "next";
 import { useEffect, useState } from "react";
-import { Product } from "src/interfaces/Product";
+import { Products } from "@prisma/client";
 import styles from "../styles/Home.module.css";
-import ListProducts from "../components/products/ListProducts";
+
 import { Layout } from "src/components/Layout";
+import { ListProducts } from "src/components/products/ListProducts";
 
-interface Props {
-  products: Product[];
-}
+type Props = {
+  products: Products[];
+};
 
-export default function Index({ products }: Props) {
-  return (
-    <Layout>
-      {/* <ListProducts products={products} /> */}
-      <div>hola</div>
-    </Layout>
-  );
-}
-/*
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const res = await fetch("http://localhost:3000/api/products");
   const products = await res.json();
-
-  //  console.log("tasks", products);
   return {
     props: { products },
   };
 };
-*/
+
+const Index: NextPage<Props> = ({ products }) => {
+  console.log("products getstaticprops", products);
+  return (
+    <Layout>
+      <ListProducts products={products} />
+    </Layout>
+  );
+};
+
+export default Index;

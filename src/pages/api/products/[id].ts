@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { conn } from "../../../utils/db";
+import { prisma } from "../_base";
 
 export default async function productId(
   req: NextApiRequest,
@@ -10,47 +10,28 @@ export default async function productId(
   switch (method) {
     case "GET":
       try {
-        const text = "SELECT * FROM products WHERE id = $1";
-        const values = [query.id];
-        const response = await conn.query(text, values);
-        if (response.rows.length === 0) {
-          return res.status(404).json("No hay coincidencias");
-        }
-        return res.json(response.rows[0]);
+        console.log("entro a la api id");
+        const { id } = query;
+        const product = await prisma.products.findUnique({
+          where: {
+            id: id,
+          },
+          include: {
+            stock: {
+              include: {
+                colors: true,
+              },
+            },
+          },
+        });
+        console.log("api/products/id", product);
+        return product
+          ? res.status(200).json(product)
+          : res.status(400).json("No se encontraron coincidencias");
       } catch (error) {
-        console.log(req.query);
-        return res.json({ respuesta: "id unico" });
+        return res.json({ respuesta: error });
       }
-    case "DELETE":
-      try {
-        const text = "DELETE FROM products WHERE id = $1 RETURNING *";
-        const values = [query.id];
-        const response = await conn.query(text, values);
-        console.log(response);
-        if (response.rowCount === 0) {
-          return res.status(404).json("No hay coincidencias");
-        }
-        return res.status(200).json(response.rows[0]);
-      } catch (error: any) {
-        console.log(req.query);
-        return res.status(500).json({ error });
-      }
-    case "PUT":
-      try {
-        const { name, summary, price, image } = body;
-        const text =
-          "UPDATE products SET name = $1, summary = $2,price=$3, image=$4  WHERE id = $5 RETURNING *";
-        const values = [name, summary, price, image, query.id];
-        const response = await conn.query(text, values);
-        console.log("put", response);
-        if (response.rowCount === 0) {
-          return res.status(404).json("No hay coincidencias");
-        }
-        return res.status(200).json(response.rows[0]);
-      } catch (error: any) {
-        console.log(req.query);
-        return res.status(500).json({ error });
-      }
+
     default:
       res.status(404).json("Metodo no disponible");
       break;

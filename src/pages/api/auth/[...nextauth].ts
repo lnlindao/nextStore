@@ -1,13 +1,7 @@
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth from "next-auth";
 import Auth0Provider from "next-auth/providers/auth0";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-
-type SessionArg = {
-  session: Session;
-  user: User;
-};
+import { prisma } from "../_base";
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -24,5 +18,11 @@ export default NextAuth({
     //error: "/auth/error", // Error code passed in query string as ?error=
     //verifyRequest: "/auth/verify-request", // (used for check email message)
     //newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
+  },
+  callbacks: {
+    async session({ session, token, user }) {
+      session.user.role = user.role; // Add role value to user object so it is passed along with session
+      return session;
+    },
   },
 });

@@ -7,7 +7,19 @@ type Props = {
   products: Products[];
 };
 
-export const ListProducts: NextPage<Props> = ({ products }) => {
+const fetchProducts = async () => {
+  const response = await fetch("/api/products");
+  const data = await response.json();
+  return data;
+};
+
+export const ListProducts: NextPage<Props> = ({}) => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchProducts().then((products) => setProducts(products));
+  }, []);
+
   return (
     <Fragment>
       <div className={"container"}>
