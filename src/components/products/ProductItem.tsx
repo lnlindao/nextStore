@@ -8,6 +8,7 @@ type Props = {
 };
 
 export const ProductItem: NextPage<Props> = ({ products }) => {
+  console.log(products);
   return (
     <>
       {typeof products !== "string"

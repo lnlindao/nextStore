@@ -9,7 +9,6 @@ function classNames(...classes: any) {
 }
 
 export default function UserWidget({ session }: any | null) {
-  console.log("session", session);
   return (
     <div>
       {session?.user ? (

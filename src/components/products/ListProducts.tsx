@@ -1,5 +1,5 @@
 import { Products } from "@prisma/client";
-import { useEffect, useState, Fragment } from "react";
+import { Fragment } from "react";
 import { ProductItem } from "./ProductItem";
 import { NextPage } from "next";
 
@@ -10,10 +10,8 @@ type Props = {
 export const ListProducts: NextPage<Props> = ({ products }) => {
   return (
     <Fragment>
-      <div className={"container"}>
-        <div className="mx-auto content mt-6 grid grid-cols-1 gap-y-10 gap-x-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          <ProductItem products={products} />
-        </div>
+      <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-8 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <ProductItem products={products} />
       </div>
     </Fragment>
   );

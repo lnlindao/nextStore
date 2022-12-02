@@ -20,7 +20,7 @@ export const Layout = ({
           <Navbar />
         </div>
       </header>
-      <main>{children}</main>
+      <main className="container content  mx-auto">{children}</main>
       <footer className="container py-11">
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"

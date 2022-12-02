@@ -57,32 +57,60 @@ model VerificationToken {
 }
 
 model Products {
-  id          String   @id @default(cuid())
+  id          String                @id @default(cuid())
   name        String
-  summary     String   @db.VarChar(500)
-  description String?  @db.VarChar(800)
+  summary     String                @db.VarChar(500)
+  description String?               @db.VarChar(800)
   image       String?
   price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-
-  stock Stock[]
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @default(now())
+  rating      String
+  variations       VariationsByProduct[]
+  categories  CategoriesByProduct[]
 }
 
-model Colors {
-  id            String  @id @default(cuid())
-  name          String
-  class         String
-  selectedClass String
-  stock         Stock[]
+model Variations {
+  id            String                @id @default(cuid())
+  name          String                @unique
+  classColor    String?
+  selectedClass String?
+  stock         VariationsByProduct[]
+  optionName    String
+  variation     Options               @relation(fields: [optionName], references: [name])
 }
 
-model Stock {
-  id        Int      @id @default(autoincrement())
-  product   Products @relation(fields: [productId], references: [id])
+model Options {
+  id      Int          @id @default(autoincrement())
+  name    String       @unique
+  options Variations[]
+}
+
+model VariationsByProduct {
+  id        Int        @id @default(autoincrement())
+  product   Products   @relation(fields: [productId], references: [id])
   productId String
-  colors    Colors   @relation(fields: [colorId], references: [id])
-  colorId   String
-  createdAt DateTime @default(now())
+  variation    Variations @relation(fields: [variationName], references: [name])
+  variationName String
+  createdAt DateTime   @default(now())
   quantity  Int
+  @@unique([productId, variationName])
+}
+
+model Categories {
+  id          String                @id @default(cuid())
+  name        String
+  description String?
+  categories  CategoriesByProduct[]
+}
+
+model CategoriesByProduct {
+  id          Int        @id @default(autoincrement())
+  product     Products   @relation(fields: [productId], references: [id])
+  productId   String
+  categorie  Categories @relation(fields: [categorieId], references: [id])
+  categorieId String
+  createdAt   DateTime   @default(now())
+
+  @@unique([productId, categorieId])
 }

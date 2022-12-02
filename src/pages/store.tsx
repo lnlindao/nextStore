@@ -1,8 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
-import { useEffect, useState } from "react";
 import { Products } from "@prisma/client";
-import styles from "../styles/Home.module.css";
-
 import { Layout } from "src/components/Layout";
 import { ListProducts } from "src/components/products/ListProducts";
 
@@ -18,13 +15,17 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   };
 };
 
-const Index: NextPage<Props> = ({ products }) => {
-  console.log("products index", products);
+const Store: NextPage<Props> = ({ products }) => {
   return (
     <Layout>
-      <ListProducts products={products} />
+      <section className="content grid grid-cols-5 gap-8 ">
+        <aside>Filtros</aside>
+        <section className="col-span-4">
+          <ListProducts products={products} />
+        </section>
+      </section>
     </Layout>
   );
 };
 
-export default Index;
+export default Store;

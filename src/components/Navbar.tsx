@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useContext } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
 import {
@@ -10,6 +10,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import UserWidget from "./navbar/userWidget";
+import { Store } from "src/reducer/Store";
+import style from "../styles/Navbar.module.css";
 
 const navigation = {
   categories: [
@@ -137,7 +139,7 @@ const navigation = {
   ],
   pages: [
     { name: "Company", href: "#" },
-    { name: "Stores", href: "#" },
+    { name: "Tienda", href: "/store" },
     { name: "Nuevo producto", href: "/products/new-product" },
   ],
 };
@@ -149,6 +151,8 @@ function classNames(...classes: any) {
 export default function Example() {
   const [open, setOpen] = useState(false);
   const { data: session, status } = useSession();
+  const { state } = useContext(Store);
+  const { cart } = state;
 
   return (
     <div className="bg-white">
@@ -497,16 +501,25 @@ export default function Example() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-1 flex items-center p-6">
+                  <Link
+                    href="/cart"
+                    className="group -m-1 flex items-center p-6"
+                  >
                     <ShoppingBagIcon
-                      className="h-6 w-9 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                      className="h-6  text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                      0
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                      {cart.cartItems.length > 0 ? (
+                        <div className={style.cartCount}>
+                          {cart.cartItems.length}
+                        </div>
+                      ) : (
+                        0
+                      )}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
-                  </a>
+                  </Link>
                 </div>
 
                 <UserWidget session={session} />

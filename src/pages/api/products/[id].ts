@@ -10,26 +10,31 @@ export default async function productId(
   switch (method) {
     case "GET":
       try {
-        console.log("entro a la api id");
         const { id } = query;
+
         const product = await prisma.products.findUnique({
           where: {
             id: id,
           },
           include: {
-            stock: {
-              include: {
-                colors: true,
+            categories: {
+              select: {
+                categorie: true,
+              },
+            },
+            variations: {
+              select: {
+                quantity: true,
+                variation: true,
               },
             },
           },
         });
-        console.log("api/products/id", product);
         return product
           ? res.status(200).json(product)
           : res.status(400).json("No se encontraron coincidencias");
       } catch (error) {
-        return res.json({ respuesta: error });
+        return res.json({ error: error });
       }
 
     default:
